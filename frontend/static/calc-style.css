@@ -1,0 +1,141 @@
+body {
+    font-family: 'Titillium Web', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url("imgs/calc-bg.jpg");
+    background-size: cover;
+}
+
+
+.container {
+    max-width: 80%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.block {
+    background-color: #fff;
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 210px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+.input-block{
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    padding-left: 40px;
+}
+.db-block{
+    align-items: center;
+    height: 600px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: black solid 2px;
+    width: 25%;
+    margin: auto 20px;
+    transition: .1s;
+}
+.input-time-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: black solid 2px;
+    margin: auto 20px;
+    transition: .1s;
+}
+.expr-time{
+    outline: none;
+    color: black;
+    font-size: 16px;
+    border: none;
+}
+
+.expr-input {
+    padding: 10px;
+    width: calc(100% - 60px);
+    padding-bottom: 5px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+
+.expr-input-time-img {
+    height: 30px;
+    padding: 5px 0;
+    margin-left: 10px;
+    transition: 0.5s;
+}
+.expr-input-img {
+    height: 40px;
+    margin-left: 10px;
+    transition: 0.5s;
+}
+
+.expr-input-img:hover{
+    filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+}
+
+.data-title, .settings-title {
+   margin-bottom: 10px;
+    height: 60px;
+}
+
+.data-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.expression {
+    display: flex;
+    align-items: center;
+}
+
+.expr-img-status {
+    max-width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.expr-text{
+    margin: 4px 0;
+}
+.expr-text-time{
+    color: rgb(90, 90, 90);
+    font-size: 14px;
+    margin-left: 12px;
+}
+
+.settings-container{
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+.settings-text{
+    margin-right: 4px;
+    font-style: 20px;
+    font-weight: bold;
+}
+.settings-input {
+    font-family: 'Titillium Web', sans-serif;
+    padding: 10px;
+    padding-bottom: 5px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    border-bottom: black solid 2px;
+    margin: 10px 0;
+}
+

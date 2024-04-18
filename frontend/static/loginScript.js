@@ -20,12 +20,22 @@ function Log() {
         .then(response => {
             // Обработка ответа от сервера
             if (response.status == 200) {
-                console.log("successfully logged")
-            } else {
-                alert("Failed to handle data from server");
+                console.log("calc page must be loaded!")
+                window.location.href = "http://localhost:8080/calc?username=" + data.username;
+            }else if(response.status == 403){
+                alert("Wrong username or password");
+            }else if(response.status == 500){
+                alert("Something went wrong on server");
+            }else {
+                return response.json();
             }
         })
-        .catch(error => {
-            alert("Failed to send data to server");
-        });
+        .then(data => {
+            if (data=="go to register") {
+                window.location.href = "http://localhost:8080/register";
+            }else{
+                return
+            }
+        })
 }
+

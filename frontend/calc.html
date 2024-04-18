@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="icon" href="static/imgs/calculator.png">
+    <title>calc by Romchik</title>
+    <link rel="stylesheet" href="static/calc-style.css">
+</head>
+<body>
+  <div class="container">
+        <div class="block input-block">
+            <div class="input-container">
+                <input type="text" class="expr-input">
+                <img src="static/imgs/calculator.png" alt="" class="expr-input-img send-btn">
+            </div>
+            <div class="input-time-container">
+                <input type="number" class="expr-time" value="60">
+                <img src="static/imgs/time.png" alt="" class="expr-input-time-img">
+            </div>
+            <p class="expr-time-text">Execution Time (seconds)</p>
+        </div>
+        <div class="block db-block">
+            <img src="static/imgs/database.png" alt="" class="data-title">
+            <div class="data-container">
+                {{range .}}
+                    <div class="expression">
+                        {{if eq .Status `done`}}
+                            <img src="static/imgs/tick.png" alt="" class="expr-img-status">
+                            <p class="expr-text">{{.Expression}}={{.Result}}</p><p class="expr-text-time">{{.StartingTime}}</p>
+                        {{else if eq .Status `waiting`}}
+                            <img src="static/imgs/time.png" alt="" class="expr-img-status">
+                            <p class="expr-text">{{.Expression}}</p><p class="expr-text-time">{{.StartingTime}}</p>
+                        {{else if eq .Status `failed`}}
+                            <img src="static/imgs/x.png" alt="" class="expr-img-status">
+                            <p class="expr-text">{{.Expression}}</p><p class="expr-text-time">{{.StartingTime}}</p>
+                        {{end}}
+                    </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+
+    <script src="static/calcScript.js"></script>
+</body>
+</html>

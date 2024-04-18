@@ -1,11 +1,14 @@
 package logger
 
-import "log/slog"
+import (
+	"fmt"
+	"log/slog"
+)
 
 func Info(message string) {
-	slog.Info(message)
+	slog.Info(fmt.Sprintf("| %s", message))
 }
 
 func Error(message string) {
-	slog.Error(message)
+	slog.Error(fmt.Sprintf("| %s", message))
 }

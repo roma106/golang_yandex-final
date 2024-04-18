@@ -1,8 +1,8 @@
 package main
 
 import (
-	"jwt_lesson/internal/app"
-	"jwt_lesson/internal/logger"
+	"calculator_final/internal/app"
+	"calculator_final/internal/logger"
 )
 
 func main() {

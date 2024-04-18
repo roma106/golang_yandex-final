@@ -21,9 +21,12 @@ function Reg() {
     }).then(response => {
             // Обработка ответа от сервера
             if (response.status == 200) {
-                console.log("successfully registered")
-            } else {
-                alert("Failed to handle data from server");
+                window.location.href = "http://localhost:8080/calc?username=" + data.username;
+                return
+            } else if(response.status == 403){
+                alert("User with such name already exists");
+            }else {
+                alert("Something went wrong on server");
             }
         })
         .catch(error => {
@@ -38,9 +41,32 @@ function Validate(){
     if (username == "" || username==null || pass1==null || pass2==null || pass1=="" || pass2==""){
         alert("Please enter valid data");
         return false;
+    }else if(pass1.length < 8 || pass2.length < 8){
+        alert("Password must be at least 8 characters long");
     }else if(pass1!=pass2){
         alert("Passwords don't match");
         return false;
     }
     return true
 }
+
+let passInput = document.querySelector("#pass");
+let passInput2 = document.querySelector("#pass2");
+passInput.addEventListener('input', ()=>{
+    if (passInput.value.length < 8){
+      passInput.style.borderBottom = "2px solid red";
+      regButton.style.opacity = "0.5";
+    }else{
+      passInput.style.borderBottom = "2px solid black";
+      regButton.style.opacity = "1";
+    }
+});
+passInput2.addEventListener('input', ()=>{
+    if (passInput2.value.length < 8){
+      passInput2.style.borderBottom = "2px solid red";
+      regButton.style.opacity = "0.5";
+    }else{
+      passInput2.style.borderBottom = "2px solid black";
+      regButton.style.opacity = "1";
+    }
+});
