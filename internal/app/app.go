@@ -67,7 +67,6 @@ func New() (*App, error) {
 func (a *App) Run() error {
 	logger.Info("Starting server...")
 	fmt.Println("Your link for webpage: http://localhost:8080/login")
-	defer a.usersDB.Close()
 	defer logger.Info("Database connection closed")
 
 	err := a.server.ListenAndServe()

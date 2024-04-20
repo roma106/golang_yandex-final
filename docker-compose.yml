@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "ri106rom"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5433:5432
+
+  app-server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: app-server
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080

@@ -55,3 +55,13 @@ func (s *Storage) GetToken(userId string) (*entities.JWT, error) {
 	}
 	return &entities.JWT{}, fmt.Errorf("token for user %v not found", userId)
 }
+
+func (s *Storage) DeleteToken(userId string) error {
+	for i, token := range s.JWTokens {
+		if token.UserID == userId {
+			s.JWTokens = append(s.JWTokens[:i], s.JWTokens[i+1:]...)
+			return nil
+		}
+	}
+	return fmt.Errorf("token for user %v not found", userId)
+}

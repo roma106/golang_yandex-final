@@ -30,7 +30,7 @@ func InitUsers(db *sql.DB) error {
 
 func ConnectToDB(name string) *sql.DB {
 	logger.Info(fmt.Sprintf("Connecting to database %s...", name))
-	db, err := sql.Open("postgres", fmt.Sprintf("host=localhost port=5432 user=postgres password=ri106rom dbname=%s sslmode=disable", name))
+	db, err := sql.Open("postgres", fmt.Sprintf("host=postgres port=5432 user=postgres password=ri106rom dbname=%s sslmode=disable", name))
 	if err != nil {
 		logger.Error("Failed to connect to database: " + err.Error())
 		return nil

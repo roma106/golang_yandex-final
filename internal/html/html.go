@@ -48,6 +48,11 @@ func LoadCalculatorPage(w http.ResponseWriter, r *http.Request, storage *storage
 			return
 		}
 		w.Header().Set("Authorization", token.Token)
+		// токен использован - удаляем его из кеша
+		// err = storage.DeleteToken(user.ID)
+		// if err != nil {
+		// 	logger.Error(fmt.Sprintf("failed to delete token from storage. Error: %v", err))
+		// }
 
 		// подгружаем выражения пользователя из БД его таблицы
 		exprs, err := databases.GetExpressions(db, user.ID)

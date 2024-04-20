@@ -28,7 +28,7 @@ func CreateJWT(username string) (string, error) {
 	return tokenString, nil
 }
 
-// обновляет время истечения jwt токена обратно на 15 минут
+// обновляет время истечения jwt токена обратно на 10 минут
 func UpdateToken(tokenString string) (string, error) {
 	var claims jwt.MapClaims
 	_, _, err := new(jwt.Parser).ParseUnverified(tokenString, &claims)

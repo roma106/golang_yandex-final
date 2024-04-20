@@ -66,16 +66,11 @@ func LogIn(w http.ResponseWriter, r *http.Request, storage *storage.Storage, db 
 	}
 
 	// обновим токен
-	token := r.Header.Get("Authorization")
-	token, err = jwt.UpdateToken(token)
+	token, err := jwt.CreateJWT(user.Username)
 	if err != nil {
-		logger.Error(fmt.Sprintf("failed to update token. Error: %v. Creating new token for user %v", err, user.Username))
-		token, err = jwt.CreateJWT(user.Username)
-		if err != nil {
-			logger.Error(fmt.Sprintf("failed to create new token. Error: %v. User: %v", err, user.Username))
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+		logger.Error(fmt.Sprintf("failed to create new token. Error: %v. User: %v", err, user.Username))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	// Добавляем токен в кеш, чтобы получить его после редиректа
 	err = storage.AddToken(user.ID, token)
