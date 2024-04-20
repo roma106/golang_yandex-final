@@ -6,14 +6,16 @@ import (
 	"reflect"
 )
 
-// хранилище ЗАЛОГИНЕННЫХ пользователей не выполняет особо важных функций
+// хранилище ЗАЛОГИНЕННЫХ пользователей не выполняет особо важных функций, кэш для jwt нужен для передачи токена при редиректе на страницу калькулятора
 type Storage struct {
 	UsersLogged []entities.User
+	JWTokens    []entities.JWT
 }
 
 func New() *Storage {
 	users := make([]entities.User, 0)
-	return &Storage{users}
+	tokens := make([]entities.JWT, 0)
+	return &Storage{users, tokens}
 }
 
 func (s *Storage) AddUser(user entities.User) error {
@@ -36,14 +38,20 @@ func (s *Storage) GetUser(Username string) (*entities.User, error) {
 	return &entities.User{}, fmt.Errorf("user %v not found", Username)
 }
 
-// func (s *Storage) EditUserStatus(ID, status string) error {
-// 	for _, user := range s.UsersLogged {
-// 		user := user
-// 		if user.Id == ID {
-// 			user.Logged = status == "logged"
-// 			logger.Info(fmt.Sprintf("user %v status changed to 'logged'", user.Username))
-// 			return nil
-// 		}
-// 	}
-// 	return fmt.Errorf("user with ID %v not found", ID)
-// }
+func (s *Storage) AddToken(userId string, tokenString string) error {
+	if userId == "" || tokenString == "" {
+		return fmt.Errorf("user id or token string is empty")
+	}
+	token := entities.JWT{Token: tokenString, UserID: userId}
+	s.JWTokens = append(s.JWTokens, token)
+	return nil
+}
+
+func (s *Storage) GetToken(userId string) (*entities.JWT, error) {
+	for _, token := range s.JWTokens {
+		if token.UserID == userId {
+			return &token, nil
+		}
+	}
+	return &entities.JWT{}, fmt.Errorf("token for user %v not found", userId)
+}

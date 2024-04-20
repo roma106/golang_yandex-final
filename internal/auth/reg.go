@@ -3,6 +3,7 @@ package auth
 import (
 	"calculator_final/internal/databases"
 	"calculator_final/internal/entities"
+	"calculator_final/internal/jwt"
 	"calculator_final/internal/logger"
 	"calculator_final/internal/storage"
 	"calculator_final/internal/utils"
@@ -76,6 +77,19 @@ func Reg(w http.ResponseWriter, r *http.Request, storage *storage.Storage, users
 		logger.Error(fmt.Sprintf("failed to add user to storage. Error: %v", err))
 		return
 	}
+	// возвращаем jwt токен
+	tokenString, err := jwt.CreateJWT(user.Username)
+	if err != nil {
+		logger.Error(fmt.Sprintf("failed to create JWT. Error: %v", err))
+		return
+	}
+	err = storage.AddToken(user.ID, tokenString)
+	if err != nil {
+		logger.Error(fmt.Sprintf("failed to add token to storage. Error: %v", err))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(tokenString))
 	logger.Info(fmt.Sprintf("user %v added to a storage", user.Username))
 	logger.Info(fmt.Sprintf("user %v successfully registered", user.Username))
 }

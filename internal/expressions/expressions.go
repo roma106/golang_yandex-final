@@ -3,6 +3,7 @@ package expressions
 import (
 	"calculator_final/internal/databases"
 	"calculator_final/internal/entities"
+	"calculator_final/internal/jwt"
 	"calculator_final/internal/logger"
 	"calculator_final/internal/utils"
 	"database/sql"
@@ -15,6 +16,24 @@ import (
 )
 
 func NewExpression(w http.ResponseWriter, r *http.Request, usersdb, exprsdb *sql.DB) {
+	// Перед созданием выражения проверяем JWT токен
+	token := r.Header.Get("Authorization")
+	ok, err := jwt.IsTokenExpired(token)
+	if err != nil {
+		if err.Error() == "Token is expired" {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		logger.Error(fmt.Sprintf("failed to check token. Error: %v", err))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if ok {
+		logger.Error(fmt.Sprintf("invalid token. Error: %v", err))
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	expr := entities.Expression{}
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -57,4 +76,5 @@ func NewExpression(w http.ResponseWriter, r *http.Request, usersdb, exprsdb *sql
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
 }

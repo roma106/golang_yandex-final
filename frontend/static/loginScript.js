@@ -14,14 +14,17 @@ function Log() {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Methods': 'POST',
             'Access-Control-Allow-Origin': '*',
+            'Authorization': localStorage.getItem('token'),
         },
         body: JSON.stringify(data),
     })
         .then(response => {
             // Обработка ответа от сервера
             if (response.status == 200) {
-                console.log("calc page must be loaded!")
-                window.location.href = "http://localhost:8080/calc?username=" + data.username;
+                const token = response.headers.get('Authorization');
+                    localStorage.setItem('token', token);
+                    window.location.href = "http://localhost:8080/calc?username=" + data.username;
+                    return
             }else if(response.status == 403){
                 alert("Wrong username or password");
             }else if(response.status == 500){
@@ -38,4 +41,3 @@ function Log() {
             }
         })
 }
-

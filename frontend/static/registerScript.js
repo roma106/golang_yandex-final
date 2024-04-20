@@ -21,8 +21,11 @@ function Reg() {
     }).then(response => {
             // Обработка ответа от сервера
             if (response.status == 200) {
-                window.location.href = "http://localhost:8080/calc?username=" + data.username;
-                return
+                return response.text().then(token => {
+                    localStorage.setItem('token', token);
+                    window.location.href = "http://localhost:8080/calc?username=" + data.username;
+                    return
+                })
             } else if(response.status == 403){
                 alert("User with such name already exists");
             }else {
@@ -30,7 +33,7 @@ function Reg() {
             }
         })
         .catch(error => {
-            alert("Failed to send data to server");
+            alert("Failed to send data to server. Error:", error);
         });
 }
 

@@ -3,6 +3,7 @@ package auth
 import (
 	"calculator_final/internal/databases"
 	"calculator_final/internal/entities"
+	"calculator_final/internal/jwt"
 	"calculator_final/internal/logger"
 	"calculator_final/internal/storage"
 	"calculator_final/internal/utils"
@@ -64,6 +65,25 @@ func LogIn(w http.ResponseWriter, r *http.Request, storage *storage.Storage, db 
 		logger.Error(fmt.Sprintf("failed to edit user in database. Error: %v", err))
 	}
 
-	http.Redirect(w, r, string("/calc?username="+user.Username), http.StatusFound)
+	// обновим токен
+	token := r.Header.Get("Authorization")
+	token, err = jwt.UpdateToken(token)
+	if err != nil {
+		logger.Error(fmt.Sprintf("failed to update token. Error: %v. Creating new token for user %v", err, user.Username))
+		token, err = jwt.CreateJWT(user.Username)
+		if err != nil {
+			logger.Error(fmt.Sprintf("failed to create new token. Error: %v. User: %v", err, user.Username))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+	// Добавляем токен в кеш, чтобы получить его после редиректа
+	err = storage.AddToken(user.ID, token)
+	if err != nil {
+		logger.Error(fmt.Sprintf("failed to add token to storage. Error: %v. User: %v", err, user.Username))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, string("/calc?username="+user.Username), http.StatusTemporaryRedirect)
 	logger.Info(fmt.Sprintf("user %v successfully logged in", user.Username))
 }

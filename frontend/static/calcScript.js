@@ -38,6 +38,7 @@ function sendData() {
     expression: document.querySelector(".expr-input").value,
     time: document.querySelector(".expr-time").value
   };
+  console.log(localStorage.getItem('token'));
 
   // Отправка данных на сервер
   fetch('http://localhost:8080/new-expr', {
@@ -46,6 +47,7 @@ function sendData() {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Methods': 'POST',
       'Access-Control-Allow-Origin': '*',
+      'Authorization': localStorage.getItem('token'),
     },
     body: JSON.stringify(data),
   })
@@ -53,7 +55,10 @@ function sendData() {
     // Обработка ответа от сервера
     if (response.status == 200) {
       window.location.reload();
-    } else {
+    }else if(response.status==401){
+      alert("Your Authorization token(jwt) has expired. Please log in again.");
+      window.location.href = "http://localhost:8080/login"; 
+    }else {
       alert("Failed to handle data from server");
     }
   })

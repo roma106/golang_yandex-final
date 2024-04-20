@@ -31,7 +31,7 @@ func LoadStaticFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoadCalculatorPage(w http.ResponseWriter, r *http.Request, storage *storage.Storage, db *sql.DB) {
-	// получаем имя пользователя из строки запроса и прогружаем страницу для него
+	// получаем имя пользователя из строки запроса
 	username := r.URL.Query().Get("username")
 	if username == "" {
 		http.Error(w, "no username provided", http.StatusForbidden)
@@ -40,6 +40,15 @@ func LoadCalculatorPage(w http.ResponseWriter, r *http.Request, storage *storage
 	// если user залогинен (есть в массиве залогиненных челиков)- выдаем ему страничку
 	user, err := storage.GetUser(username)
 	if err == nil && user != nil {
+		// получили ID пользователя - достаем токен из кеша и возвращаем в header
+		token, err := storage.GetToken(user.ID)
+		if err != nil {
+			logger.Error(fmt.Sprintf("failed to get token from storage. Error: %v", err))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Authorization", token.Token)
+
 		// подгружаем выражения пользователя из БД его таблицы
 		exprs, err := databases.GetExpressions(db, user.ID)
 		if err != nil {
